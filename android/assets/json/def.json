@@ -1,0 +1,11 @@
+{
+   "com.badlogic.gdx.graphics.g2d.BitmapFont": {
+    "MyFont": { "file": "fonts/Pristina.fnt" }
+  },
+
+
+  "com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {
+    "menuButton": { "font": "MyFont"},
+    "default": {   "font": "MyFont" }
+  }
+}
