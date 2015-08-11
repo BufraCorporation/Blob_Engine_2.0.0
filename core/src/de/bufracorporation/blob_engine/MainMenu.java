@@ -29,8 +29,19 @@ public class MainMenu extends Game{
     private TextButton txtButton_play, txtButton_load, txtButton_background;
     private TextButton backs;
 
-    private Texture background, cactus;
-    private Sprite back, cact;
+    private Texture background, cactus, sun;
+    private Sprite backgroundSprite, cactusSprite, sunSprite;
+
+    private TextureAtlas GeierAtlas;
+    private Sprite  GeierSprite;
+    private int currentFrame=0;
+
+    private String currentGeierKey = new String("vulture_0000");
+
+
+    boolean[] anim = {false, false, false};
+    float ranAn = 0f;
+
 
     @Override
     public void create() {
@@ -38,27 +49,95 @@ public class MainMenu extends Game{
 
         skin = new Skin(Gdx.files.internal("json/def.json"), new TextureAtlas(("romans.pack")));
 
-
         txtButton_play = new TextButton("Play", skin);
-        txtButton_play.setBounds(Gdx.graphics.getWidth() / 2 - 100, Gdx.graphics.getHeight() / 2, 200, 60);
+        txtButton_play.setBounds(percentage_width(0.5f) - 100, percentage_height(0.5f), 200, 60);
         txtButton_load = new TextButton("Load", skin);
-        txtButton_load.setBounds(Gdx.graphics.getWidth() / 2 - 100, Gdx.graphics.getHeight() / 2 - 2 * 60, 200, 60);
-
-     /*   skin = new Skin(Gdx.files.internal("json/cactus.json"), new TextureAtlas(("Kaktus.pack")));
-        txtButton_background = new TextButton("", skin);
-        txtButton_background.setBounds(650, -10, 180, 280);
-        skin = new Skin(Gdx.files.internal("json/back.json"), new TextureAtlas(("Kaktus.pack")));
-        backs = new TextButton("", skin);
-        backs.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); */
+        txtButton_load.setBounds(percentage_width(0.5f) - 100, percentage_height(0.5f) - 2 * 60, 200, 60);
 
         background = new Texture(Gdx.files.internal("Menu/background/back.png"));
-        back = new Sprite(background);
-        back.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        backgroundSprite = new Sprite(background);
+        backgroundSprite.setBounds(0, 0, percentage_width(1f), percentage_height(1f));
 
         cactus = new Texture(Gdx.files.internal("Menu/background/kaktus.png"));
-        cact = new Sprite(cactus);
-        cact.setBounds(Gdx.graphics.getWidth() / 3 * 2, -10, Gdx.graphics.getWidth() / 6, Gdx.graphics.getHeight() / 2);
+        cactusSprite = new Sprite(cactus);
+        cactusSprite.setBounds(percentage_width(0.66f), -10, percentage_width(0.18f), percentage_height(0.6f));
 
+        sun = new Texture(Gdx.files.internal("Menu/sun_tra.png"));
+        sunSprite = new Sprite(sun);
+        sunSprite.setBounds( percentage_width(0.14f), percentage_height(0.4f), percentage_width(0.32f), percentage_width(0.32f));
+
+
+
+        GeierAtlas = new TextureAtlas(Gdx.files.internal("Menu/background/vulture/vulture.pack"));
+        TextureAtlas.AtlasRegion geierRegion = GeierAtlas.findRegion(currentGeierKey);
+        GeierSprite = new Sprite(geierRegion);
+        GeierSprite.setPosition(-GeierSprite.getWidth(), -GeierSprite.getHeight());
+
+
+        //Scheduling timer for random vultures on the Screen
+        Timer.schedule(new Timer.Task() {
+            @Override
+        public void run() {
+
+                if (!anim[0] && !anim[1] && !anim[2]) {
+                    ranAn = ((float) Math.random() * 10f);
+                    if (ranAn < 0.03) {
+                        anim[0] = true;
+                        GeierSprite.setPosition( percentage_width(0.15f), percentage_height(0.7f));
+                        GeierSprite.setScale(0.1f, 0.1f);
+                    }
+                    else if(ranAn < 0.06) {
+                        anim[1] = true;
+                        GeierSprite.setPosition( percentage_width(1f), percentage_height(0.7f));
+                        GeierSprite.setScale(1f, 1f);
+                    }
+
+                }
+
+                //animation 1 (alle anderen werden derweil blockiert):
+                // 100 frames , geier der neben der Sonne in den Bildschirm fliegt
+
+                if (anim[0]) {
+
+                    currentFrame++;
+
+                    currentGeierKey = String.format("vulture_" + "%04d", currentFrame%8);
+                    GeierSprite.setRegion(GeierAtlas.findRegion(currentGeierKey));
+                    GeierSprite.setPosition(GeierSprite.getX() + 2, GeierSprite.getY() + 4);
+                    GeierSprite.scale(0.1f);
+
+                    if(currentFrame > 100){
+                        anim[0] = false;
+                        currentFrame = 0;
+                    }
+                }
+
+                if (anim[1]) {
+                    currentFrame++;
+
+                    currentGeierKey = String.format("sidevulture_" + "%04d", currentFrame%8);
+                    GeierSprite.setRegion(GeierAtlas.findRegion(currentGeierKey));
+                    GeierSprite.setPosition(GeierSprite.getX() - 4, GeierSprite.getY());
+
+                    if(currentFrame > 300){
+                        anim[1] = false;
+                        currentFrame = 0;
+
+                    }
+                }
+            }
+
+        }, 0,1/30.0f);
+
+    }
+
+    //return p percent of screen width/height
+    private float percentage_width(float p){
+        return Gdx.graphics.getWidth() * p;
+    }
+
+    private float percentage_height(float p){
+        return Gdx.graphics.getHeight() * p;
     }
 
 
@@ -69,14 +148,16 @@ public class MainMenu extends Game{
 
         batch.begin();
 
-        back.draw(batch);
-
+        backgroundSprite.draw(batch);
+        sunSprite.draw(batch);
 
         txtButton_play.draw(batch, 1);
         txtButton_load.draw(batch, 1);
 
-        cact.draw(batch);
+        cactusSprite.draw(batch);
+        GeierSprite.draw(batch);
 
+     //   testGeierSprite.draw(batch);
 
         batch.end();
 
