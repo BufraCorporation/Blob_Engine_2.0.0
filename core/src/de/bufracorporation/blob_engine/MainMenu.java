@@ -29,12 +29,8 @@ public class MainMenu extends Game{
     private TextButton txtButton_play, txtButton_load, txtButton_background;
     private TextButton backs;
 
-    private TextButton.TextButtonStyle buttonStyle;
-    private BitmapFont font;
-    private TextureAtlas buttonsAtlas;
-
     private Texture background, cactus;
-    private TextureAtlas back;
+    private Sprite back, cact;
 
     @Override
     public void create() {
@@ -48,18 +44,20 @@ public class MainMenu extends Game{
         txtButton_load = new TextButton("Load", skin);
         txtButton_load.setBounds(Gdx.graphics.getWidth() / 2 - 100, Gdx.graphics.getHeight() / 2 - 2 * 60, 200, 60);
 
-        skin = new Skin(Gdx.files.internal("json/cactus.json"), new TextureAtlas(("Kaktus.pack")));
+     /*   skin = new Skin(Gdx.files.internal("json/cactus.json"), new TextureAtlas(("Kaktus.pack")));
         txtButton_background = new TextButton("", skin);
         txtButton_background.setBounds(650, -10, 180, 280);
-
-//
         skin = new Skin(Gdx.files.internal("json/back.json"), new TextureAtlas(("Kaktus.pack")));
+        backs = new TextButton("", skin);
+        backs.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); */
 
+        background = new Texture(Gdx.files.internal("Menu/background/back.png"));
+        back = new Sprite(background);
+        back.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-            backs = new TextButton("", skin);
-            backs.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-
+        cactus = new Texture(Gdx.files.internal("Menu/background/kaktus.png"));
+        cact = new Sprite(cactus);
+        cact.setBounds(Gdx.graphics.getWidth() / 3 * 2, -10, Gdx.graphics.getWidth() / 6, Gdx.graphics.getHeight() / 2);
 
     }
 
@@ -67,15 +65,17 @@ public class MainMenu extends Game{
     @Override
     public void render() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        //Gdx.gl.glClearColor(0.4f, 0.6f, 0.3f, 1);
+        Gdx.gl.glClearColor(0.4f, 0.6f, 0.3f, 1);
 
         batch.begin();
 
-        backs.draw(batch, 1);
+        back.draw(batch);
+
 
         txtButton_play.draw(batch, 1);
         txtButton_load.draw(batch, 1);
-        txtButton_background.draw(batch, 1);
+
+        cact.draw(batch);
 
 
         batch.end();
