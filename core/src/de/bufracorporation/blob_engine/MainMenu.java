@@ -52,7 +52,7 @@ public class MainMenu extends Game{
         txtButton_background = new TextButton("", skin);
         txtButton_background.setBounds(650, -10, 180, 280);
 
-
+//
         skin = new Skin(Gdx.files.internal("json/back.json"), new TextureAtlas(("Kaktus.pack")));
 
 

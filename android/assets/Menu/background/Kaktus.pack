@@ -1,0 +1,19 @@
+
+Kaktus2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+back
+  rotate: false
+  xy: 1, 1
+  size: 32, 512
+  orig: 32, 512
+  offset: 0, 0
+  index: -1
+kaktus
+  rotate: false
+  xy: 35, 257
+  size: 128, 256
+  orig: 128, 256
+  offset: 0, 0
+  index: -1
