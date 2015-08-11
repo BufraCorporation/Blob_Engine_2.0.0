@@ -91,7 +91,6 @@ public class MainMenu extends Game{
                         GeierSprite.setPosition( percentage_width(1f), percentage_height(0.7f));
                         GeierSprite.setScale(1f, 1f);
                     }
-
                 }
 
                 //animation 1 (alle anderen werden derweil blockiert):
@@ -127,7 +126,7 @@ public class MainMenu extends Game{
                 }
             }
 
-        }, 0,1/30.0f);
+        }, 0,1/40.0f);
 
     }
 
