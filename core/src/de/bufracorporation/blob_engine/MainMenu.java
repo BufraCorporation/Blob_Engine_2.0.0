@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.TextureData;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -26,21 +27,19 @@ public class MainMenu extends Game{
 
     private SpriteBatch batch;
     private Skin skin;
-    private TextButton txtButton_play, txtButton_load, txtButton_background;
-    private TextButton backs;
+    private TextButton txtButton_play, txtButton_load;
 
-    private Texture background, cactus, sun;
-    private Sprite backgroundSprite, cactusSprite, sunSprite;
+    private Texture background, cactus, sun, rock;
+    private Sprite backgroundSprite, cactusSprite, sunSprite, rockSprite;
+
 
     private TextureAtlas GeierAtlas;
-    private Sprite  GeierSprite;
-    private int currentFrame=0;
-
-    private String currentGeierKey = new String("vulture_0000");
-
+    private Animation GeierAnimationScreen, GeierAnimationSide, CoyoteAnimationCorner;
+    private float elapsedTime = 0, elapsedTimeCoyote=0;
+    private float CoyoteX;
 
     boolean[] anim = {false, false, false};
-    float ranAn = 0f;
+    float[] animFrame = {0, 0, 0};
 
 
     @Override
@@ -58,75 +57,60 @@ public class MainMenu extends Game{
         backgroundSprite = new Sprite(background);
         backgroundSprite.setBounds(0, 0, percentage_width(1f), percentage_height(1f));
 
-        cactus = new Texture(Gdx.files.internal("Menu/background/kaktus.png"));
-        cactusSprite = new Sprite(cactus);
-        cactusSprite.setBounds(percentage_width(0.66f), -10, percentage_width(0.18f), percentage_height(0.6f));
+        //cactus = new Texture(Gdx.files.internal("Menu/background/kaktus.png"));
+        //cactusSprite = new Sprite(cactus);
+        //cactusSprite.setBounds(percentage_width(0.85f), -40, percentage_width(0.25f), percentage_height(1f));
 
         sun = new Texture(Gdx.files.internal("Menu/sun_tra.png"));
         sunSprite = new Sprite(sun);
         sunSprite.setBounds( percentage_width(0.14f), percentage_height(0.4f), percentage_width(0.32f), percentage_width(0.32f));
 
+        rock = new Texture(Gdx.files.internal("Menu/rock_tr.png"));
+        rockSprite = new Sprite(rock);
+        rockSprite.setBounds(0, 0, percentage_width(0.6f), percentage_width(0.3f));
 
 
         GeierAtlas = new TextureAtlas(Gdx.files.internal("Menu/background/vulture/vulture.pack"));
-        TextureAtlas.AtlasRegion geierRegion = GeierAtlas.findRegion(currentGeierKey);
-        GeierSprite = new Sprite(geierRegion);
-        GeierSprite.setPosition(-GeierSprite.getWidth(), -GeierSprite.getHeight());
 
+        GeierAnimationScreen = new Animation(1/10f, GeierAtlas.findRegion("vulture_0000"),
+                GeierAtlas.findRegion("vulture_0001"), GeierAtlas.findRegion("vulture_0002"),
+                GeierAtlas.findRegion("vulture_0003"), GeierAtlas.findRegion("vulture_0004"),
+                GeierAtlas.findRegion("vulture_0005"), GeierAtlas.findRegion("vulture_0006"),
+                GeierAtlas.findRegion("vulture_0007"));
 
-        //Scheduling timer for random vultures on the Screen
-        Timer.schedule(new Timer.Task() {
-            @Override
-        public void run() {
+        GeierAnimationSide = new Animation(1/15f, GeierAtlas.findRegion("sidevulture_0001"),
+                GeierAtlas.findRegion("sidevulture_0001"), GeierAtlas.findRegion("sidevulture_0005"),
+                GeierAtlas.findRegion("sidevulture_0007"), GeierAtlas.findRegion("sidevulture_0007"),
+                GeierAtlas.findRegion("sidevulture_0007"),
+                GeierAtlas.findRegion("sidevulture_0005"), GeierAtlas.findRegion("sidevulture_0003"),
+                GeierAtlas.findRegion("sidevulture_0001"));
 
-                if (!anim[0] && !anim[1] && !anim[2]) {
-                    ranAn = ((float) Math.random() * 10f);
-                    if (ranAn < 0.03) {
-                        anim[0] = true;
-                        GeierSprite.setPosition( percentage_width(0.15f), percentage_height(0.7f));
-                        GeierSprite.setScale(0.1f, 0.1f);
-                    }
-                    else if(ranAn < 0.06) {
-                        anim[1] = true;
-                        GeierSprite.setPosition( percentage_width(1f), percentage_height(0.7f));
-                        GeierSprite.setScale(1f, 1f);
-                    }
-                }
+        CoyoteAnimationCorner = new Animation(1/10f, GeierAtlas.findRegion("coyote_0000"),
+                GeierAtlas.findRegion("coyote_0000"), GeierAtlas.findRegion("coyote_0000"),
+                GeierAtlas.findRegion("coyote_0001"), GeierAtlas.findRegion("coyote_0001"),
+                GeierAtlas.findRegion("coyote_0000"), GeierAtlas.findRegion("coyote_0000"),
+                GeierAtlas.findRegion("coyote_0001"), GeierAtlas.findRegion("coyote_0001"),
+                GeierAtlas.findRegion("coyote_0000"), GeierAtlas.findRegion("coyote_0000"),
+                GeierAtlas.findRegion("coyote_0001"), GeierAtlas.findRegion("coyote_0001"),
+                GeierAtlas.findRegion("coyote_0000"), GeierAtlas.findRegion("coyote_0000"),
 
-                //animation 1 (alle anderen werden derweil blockiert):
-                // 100 frames , geier der neben der Sonne in den Bildschirm fliegt
+                GeierAtlas.findRegion("coyote_0001"), GeierAtlas.findRegion("coyote_0002"),
+                GeierAtlas.findRegion("coyote_0003"), GeierAtlas.findRegion("coyote_0004"),
+                GeierAtlas.findRegion("coyote_0005"), GeierAtlas.findRegion("coyote_0006"),
+                GeierAtlas.findRegion("coyote_0006"), GeierAtlas.findRegion("coyote_0006"),
+                GeierAtlas.findRegion("coyote_0007"), GeierAtlas.findRegion("coyote_0007"),
+                GeierAtlas.findRegion("coyote_0008"), GeierAtlas.findRegion("coyote_0008"),
+                GeierAtlas.findRegion("coyote_0009"), GeierAtlas.findRegion("coyote_0009"),
+                GeierAtlas.findRegion("coyote_0009"), GeierAtlas.findRegion("coyote_0009"),
+                GeierAtlas.findRegion("coyote_0009"), GeierAtlas.findRegion("coyote_0009"),
+                GeierAtlas.findRegion("coyote_0010"), GeierAtlas.findRegion("coyote_0010"),
+                GeierAtlas.findRegion("coyote_0011"), GeierAtlas.findRegion("coyote_0011"),
+                GeierAtlas.findRegion("coyote_0012"), GeierAtlas.findRegion("coyote_0012"),
+                GeierAtlas.findRegion("coyote_0013"), GeierAtlas.findRegion("coyote_0013"),
+                GeierAtlas.findRegion("coyote_0014"), GeierAtlas.findRegion("coyote_0014"),
+                GeierAtlas.findRegion("coyote_0015"), GeierAtlas.findRegion("coyote_0015"),
+                GeierAtlas.findRegion("coyote_0016"), GeierAtlas.findRegion("coyote_0016"));
 
-                if (anim[0]) {
-
-                    currentFrame++;
-
-                    currentGeierKey = String.format("vulture_" + "%04d", currentFrame%8);
-                    GeierSprite.setRegion(GeierAtlas.findRegion(currentGeierKey));
-                    GeierSprite.setPosition(GeierSprite.getX() + 2, GeierSprite.getY() + 4);
-                    GeierSprite.scale(0.1f);
-
-                    if(currentFrame > 100){
-                        anim[0] = false;
-                        currentFrame = 0;
-                    }
-                }
-
-                if (anim[1]) {
-                    currentFrame++;
-
-                    currentGeierKey = String.format("sidevulture_" + "%04d", currentFrame%8);
-                    GeierSprite.setRegion(GeierAtlas.findRegion(currentGeierKey));
-                    GeierSprite.setPosition(GeierSprite.getX() - 4, GeierSprite.getY());
-
-                    if(currentFrame > 300){
-                        anim[1] = false;
-                        currentFrame = 0;
-
-                    }
-                }
-            }
-
-        }, 0,1/40.0f);
 
     }
 
@@ -148,15 +132,22 @@ public class MainMenu extends Game{
         batch.begin();
 
         backgroundSprite.draw(batch);
+
         sunSprite.draw(batch);
 
         txtButton_play.draw(batch, 1);
         txtButton_load.draw(batch, 1);
 
-        cactusSprite.draw(batch);
-        GeierSprite.draw(batch);
+        elapsedTime += Gdx.graphics.getDeltaTime();
+        elapsedTimeCoyote += Gdx.graphics.getDeltaTime();
 
-     //   testGeierSprite.draw(batch);
+        drawVultureScreen();
+        drawVultureSide();
+        drawCoyoteHowl();
+
+        rockSprite.draw(batch);
+//        cactusSprite.draw(batch);
+
 
         batch.end();
 
@@ -181,4 +172,60 @@ public class MainMenu extends Game{
     public void resume() {
     }
 
+    public void drawVultureScreen(){
+        if( Math.random() < 0.01f && !anim[0]){
+            anim[0] = true;
+            batch.draw(GeierAnimationScreen.getKeyFrame(elapsedTime, true), percentage_width(0.15f), percentage_height(0.7f), 1, 1 );
+        }
+        if(anim[0]){
+            batch.draw(GeierAnimationScreen.getKeyFrame(elapsedTime, true), percentage_width(0.15f)+0.2f*animFrame[0], percentage_height(0.7f)+animFrame[0]*0.85f, 0f + animFrame[0]*1f, 0f + animFrame[0]*1f);
+            animFrame[0]++;
+            if(animFrame[0] > 300){
+                anim[0] = false;
+                animFrame[0] = 0;
+            }
+        }
+    }
+
+    public void drawVultureSide() {
+        if (Math.random() < 0.01f && !anim[1]) {
+            anim[1] = true;
+            batch.draw(GeierAnimationSide.getKeyFrame(elapsedTime, true), percentage_width(1), percentage_height(0.7f));
+        }
+        if (anim[1]) {
+            batch.draw(GeierAnimationSide.getKeyFrame(elapsedTime, true), percentage_width(1) - 2f * animFrame[1], percentage_height(0.7f), 20, 20);
+            animFrame[1]++;
+            if (animFrame[1] > 600) {
+                anim[1] = false;
+                animFrame[1] = 0;
+            }
+        }
+    }
+
+    public void drawCoyoteHowl(){
+        if (Math.random() < 0.01f && !anim[2]) {
+            elapsedTimeCoyote = 0;
+            anim[2] = true;
+            CoyoteX = percentage_width(1);
+            batch.draw(CoyoteAnimationCorner.getKeyFrame(elapsedTimeCoyote, true),  percentage_width(1), 0, percentage_width(0.2f), percentage_width(0.1f));
+        }
+        if (anim[2]) {
+            if (animFrame[2] < 90){
+                CoyoteX -= 2;
+            }
+            else if(animFrame[2] < 240){
+
+            }
+            else if(animFrame[2] < 280){
+                CoyoteX += 2;}
+            animFrame[2]++;
+            batch.draw(CoyoteAnimationCorner.getKeyFrame(elapsedTimeCoyote, true),  CoyoteX, 0, percentage_width(0.2f), percentage_width(0.1f));
+
+
+            if( animFrame[2] > 250 ) {
+                anim[2] = false;
+                animFrame[2] = 0;
+            }
+        }
+    }
 }
