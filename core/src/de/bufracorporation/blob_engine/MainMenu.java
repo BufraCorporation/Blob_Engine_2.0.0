@@ -173,7 +173,7 @@ public class MainMenu extends Game{
     }
 
     public void drawVultureScreen(){
-        if( Math.random() < 0.01f && !anim[0]){
+        if( Math.random() < 0.002f && !anim[0]){
             anim[0] = true;
             batch.draw(GeierAnimationScreen.getKeyFrame(elapsedTime, true), percentage_width(0.15f), percentage_height(0.7f), 1, 1 );
         }
@@ -188,7 +188,7 @@ public class MainMenu extends Game{
     }
 
     public void drawVultureSide() {
-        if (Math.random() < 0.01f && !anim[1]) {
+        if (Math.random() < 0.002f && !anim[1]) {
             anim[1] = true;
             batch.draw(GeierAnimationSide.getKeyFrame(elapsedTime, true), percentage_width(1), percentage_height(0.7f));
         }
@@ -203,7 +203,7 @@ public class MainMenu extends Game{
     }
 
     public void drawCoyoteHowl(){
-        if (Math.random() < 0.01f && !anim[2]) {
+        if (Math.random() < 0.002f && !anim[2]) {
             elapsedTimeCoyote = 0;
             anim[2] = true;
             CoyoteX = percentage_width(1);
