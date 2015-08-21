@@ -1,6 +1,7 @@
 package de.bufracorporation.blob_engine;
 
 
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -12,8 +13,10 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 
 import javax.xml.soap.Text;
@@ -22,7 +25,8 @@ import javax.xml.soap.Text;
 /**
  * Created by Marc on 08.08.2015.
  */
-public class MainMenu extends Game{
+public class Entry extends Game{
+
 
     private SpriteBatch batch;
     private Skin skin;
@@ -44,11 +48,19 @@ public class MainMenu extends Game{
     @Override
     public void create() {
         batch = new SpriteBatch();
-//test
+
         skin = new Skin(Gdx.files.internal("json/def.json"), new TextureAtlas(("romans.pack")));
 
         txtButton_play = new TextButton("Play", skin);
         txtButton_play.setBounds(percentage_width(0.5f) - 100, percentage_height(0.5f), 200, 60);
+        txtButton_play.addListener(new ClickListener(){
+           @Override
+        public void clicked(InputEvent event, float x, float y){
+               System.out.println("clicked");
+
+           }
+        });
+
         txtButton_load = new TextButton("Load", skin);
         txtButton_load.setBounds(percentage_width(0.5f) - 100, percentage_height(0.5f) - 2 * 60, 200, 60);
 
@@ -123,6 +135,8 @@ public class MainMenu extends Game{
     public void render() {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glClearColor(0.4f, 0.6f, 0.3f, 1);
+
+
 
         batch.begin();
 

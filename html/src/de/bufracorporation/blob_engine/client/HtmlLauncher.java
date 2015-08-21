@@ -3,7 +3,7 @@ package de.bufracorporation.blob_engine.client;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
-import de.bufracorporation.blob_engine.MainMenu;
+import de.bufracorporation.blob_engine.Entry;
 
 public class HtmlLauncher extends GwtApplication {
 
@@ -14,6 +14,6 @@ public class HtmlLauncher extends GwtApplication {
 
         @Override
         public ApplicationListener getApplicationListener () {
-                return new MainMenu();
+                return new Entry();
         }
 }
