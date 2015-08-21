@@ -1,21 +1,20 @@
 package de.bufracorporation.blob_engine;
 
-import com.badlogic.gdx.ApplicationAdapter;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.TextureData;
+
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
+
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.utils.Timer;
+
 
 import javax.xml.soap.Text;
 
@@ -45,7 +44,7 @@ public class MainMenu extends Game{
     @Override
     public void create() {
         batch = new SpriteBatch();
-
+//test
         skin = new Skin(Gdx.files.internal("json/def.json"), new TextureAtlas(("romans.pack")));
 
         txtButton_play = new TextButton("Play", skin);
@@ -56,10 +55,6 @@ public class MainMenu extends Game{
         background = new Texture(Gdx.files.internal("Menu/background/back.png"));
         backgroundSprite = new Sprite(background);
         backgroundSprite.setBounds(0, 0, percentage_width(1f), percentage_height(1f));
-
-        //cactus = new Texture(Gdx.files.internal("Menu/background/kaktus.png"));
-        //cactusSprite = new Sprite(cactus);
-        //cactusSprite.setBounds(percentage_width(0.85f), -40, percentage_width(0.25f), percentage_height(1f));
 
         sun = new Texture(Gdx.files.internal("Menu/sun_tra.png"));
         sunSprite = new Sprite(sun);
@@ -190,12 +185,12 @@ public class MainMenu extends Game{
     public void drawVultureSide() {
         if (Math.random() < 0.002f && !anim[1]) {
             anim[1] = true;
-            batch.draw(GeierAnimationSide.getKeyFrame(elapsedTime, true), percentage_width(1), percentage_height(0.7f));
+            batch.draw(GeierAnimationSide.getKeyFrame(elapsedTime/2, true), percentage_width(1), percentage_height(0.7f));
         }
         if (anim[1]) {
-            batch.draw(GeierAnimationSide.getKeyFrame(elapsedTime, true), percentage_width(1) - 2f * animFrame[1], percentage_height(0.7f), 20, 20);
+            batch.draw(GeierAnimationSide.getKeyFrame(elapsedTime/2, true), percentage_width(1) - 1f * animFrame[1], percentage_height(0.7f), 20, 20);
             animFrame[1]++;
-            if (animFrame[1] > 600) {
+            if (animFrame[1] > 1200) {
                 anim[1] = false;
                 animFrame[1] = 0;
             }
@@ -203,7 +198,7 @@ public class MainMenu extends Game{
     }
 
     public void drawCoyoteHowl(){
-        if (Math.random() < 0.002f && !anim[2]) {
+        if (Math.random() < 0.0004f && !anim[2]) {
             elapsedTimeCoyote = 0;
             anim[2] = true;
             CoyoteX = percentage_width(1);
